@@ -1,4 +1,3 @@
-from os import path
 from subprocess import Popen, PIPE
 
 from pretix.base.models import OrderPosition
@@ -28,7 +27,10 @@ def generate_link(order_position: OrderPosition,
     if not path.isfile(path_to_generator):
         raise ValueError(f'Generator file not found in {generator_jar}')
 
-    email = order_position.attendee_email
+    if order_position.attendee_email:
+        email = order_position.attendee_email
+    else:
+        email = order_position.order.email
     event_id = order_position.order.event.id
     # the Java code is accepting only BigInt, so we need to convert a string ID to a number
     pseudonymization_id = order_position.pseudonymization_id
