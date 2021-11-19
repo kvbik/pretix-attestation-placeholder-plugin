@@ -12,13 +12,14 @@ class PluginSettingsView(EventSettingsViewMixin, FormView):
     template_name = 'pretix_attestation_plugin/attestation_plugin_settings.html'
     permission = 'can_change_event_settings'
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
+    def get_initial(self):
+        initial = super().get_initial()
         try:
-            kwargs["current_base_url"] = models.BaseURL.objects.get(event=self.request.event).string_url
+            current_base_url = models.BaseURL.objects.get(event=self.request.event).string_url
         except models.BaseURL.DoesNotExist:
-            kwargs["current_base_url"] = "Not set yet"
-        return kwargs
+            current_base_url = ''
+        initial["base_url"] = current_base_url
+        return initial
 
     def form_valid(self, form):
         self.write_to_file(form.cleaned_data["keyfile"])
