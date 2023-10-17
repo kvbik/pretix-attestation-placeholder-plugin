@@ -56,7 +56,6 @@ setup(
 
     install_requires=[
         "pretix>=3.8.0",
-        "urllib3<1.26.0",
     ],
     python_requires='>=3.6, <4',
     extras_require=extras_require,
